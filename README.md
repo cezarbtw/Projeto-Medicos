@@ -211,4 +211,4 @@ GitHub:
 https://github.com/cezarbtw
 
 LinkedIn:
-(adicione seu LinkedIn aqui)
+https://www.linkedin.com/in/cezarinaciol/
