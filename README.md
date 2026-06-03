@@ -1,50 +1,214 @@
-## 💻 Sobre o projeto
+# 🩺 Voll Med API
 
-Voll.med é uma clínica médica fictícia que precisa de um aplicativo para gestão de consultas. O aplicativo deve possuir funcionalidades que permitam o cadastro de médicos e de pacientes, e também o agendamento e cancelamento de consultas.
+API REST desenvolvida com Java e Spring Boot para gerenciamento de médicos, pacientes e consultas médicas.
 
-Enquanto um time de desenvolvimento será responsável pelo aplicativo mobile, o nosso será responsável pelo desenvolvimento da API Rest desse projeto.
-
----
-
-## ⚙️ Funcionalidades
-
-- [x] CRUD de médicos;
-- [x] CRUD de pacientes;
-- [x] Agendamento de consultas;
-- [x] Cancelamento de consultas.
+O projeto implementa autenticação e autorização com JWT, validações de negócio, persistência de dados com JPA/Hibernate e documentação automática da API utilizando Swagger/OpenAPI.
 
 ---
 
-## 🎨 Layout
+##  Tecnologias Utilizadas
 
-O layout da aplicação mobile está disponível neste link: <a href="https://www.figma.com/file/N4CgpJqsg7gjbKuDmra3EV/Voll.med">Figma</a>
-
----
-
-## 📄 Documentação
-
-A documentação das funcionalidades da aplicação pode ser acessada neste link: <a href="https://trello.com/b/O0lGCsKb/api-voll-med">Trello</a>
-
----
-
-## 🛠 Tecnologias
-
-As seguintes tecnologias foram utilizadas no desenvolvimento da API Rest do projeto:
-
-- **[Java 17](https://www.oracle.com/java)**
-- **[Spring Boot 3](https://spring.io/projects/spring-boot)**
-- **[Maven](https://maven.apache.org)**
-- **[MySQL](https://www.mysql.com)**
-- **[Hibernate](https://hibernate.org)**
-- **[Flyway](https://flywaydb.org)**
-- **[Lombok](https://projectlombok.org)**
+- Java 17
+- Spring Boot 3
+- Spring Web
+- Spring Data JPA
+- Spring Security
+- JWT (JSON Web Token)
+- Flyway
+- MySQL
+- Lombok
+- Maven
+- Swagger / OpenAPI
 
 ---
 
-## 📝 Licença
+##  Funcionalidades
 
-Projeto desenvolvido por [Alura](https://www.alura.com.br) e utilizado nos cursos de Spring Boot.
+### Médicos
+- Cadastro de médicos
+- Listagem paginada
+- Atualização de dados
+- Exclusão lógica (inativação)
+- Controle por especialidade
 
-Instrutor: [Rodrigo Ferreira](https://cursos.alura.com.br/user/rodrigo-ferreira) 
+### Pacientes
+- Cadastro de pacientes
+- Listagem paginada
+- Atualização de dados
+- Exclusão lógica (inativação)
+
+### Consultas
+- Agendamento de consultas
+- Cancelamento de consultas
+- Regras de validação para agendamento
+- Controle de horários disponíveis
+
+### Segurança
+- Login de usuários
+- Geração de Token JWT
+- Rotas protegidas
+- Controle de autenticação via Spring Security
 
 ---
+
+##  Arquitetura
+
+O projeto segue uma arquitetura em camadas:
+
+```text
+Controller
+   ↓
+Service / Regras de Negócio
+   ↓
+Repository
+   ↓
+Banco de Dados
+```
+
+Estrutura principal:
+
+```text
+src/main/java
+
+├── controller
+├── domain
+│   ├── medico
+│   ├── paciente
+│   ├── consulta
+│   ├── usuario
+│   └── endereco
+├── infra
+│   ├── security
+│   ├── exception
+│   └── springdoc
+```
+
+---
+
+##  Autenticação
+
+A API utiliza autenticação baseada em JWT.
+
+Fluxo:
+
+1. Usuário realiza login
+2. API gera um token JWT
+3. Token é enviado no Header das requisições
+
+Exemplo:
+
+```http
+Authorization: Bearer SEU_TOKEN
+```
+
+---
+
+##  Documentação
+
+Após iniciar a aplicação, a documentação Swagger pode ser acessada em:
+
+```text
+http://localhost:8080/swagger-ui.html
+```
+
+ou
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+---
+
+## ⚙️ Como Executar
+
+### Clonar o projeto
+
+```bash
+git clone https://github.com/cezarbtw/Projeto-Medicos.git
+```
+
+### Entrar na pasta
+
+```bash
+cd Projeto-Medicos
+```
+
+### Configurar o banco de dados
+
+Editar o arquivo:
+
+```properties
+application.properties
+```
+
+Configurando:
+
+```properties
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+```
+
+### Executar
+
+```bash
+mvn spring-boot:run
+```
+
+ou executar a classe:
+
+```java
+ApiApplication.java
+```
+
+---
+
+##  Principais Conceitos Aplicados
+
+- API REST
+- CRUD completo
+- DTOs
+- Validação de dados
+- Paginação
+- Tratamento global de exceções
+- Autenticação JWT
+- Spring Security
+- Migrações com Flyway
+- Documentação OpenAPI
+- Boas práticas de arquitetura
+
+---
+
+##  Screenshots
+
+### Swagger
+
+Adicione aqui uma captura da documentação da API.
+
+### Banco de Dados
+
+Adicione aqui uma captura das tabelas e relacionamentos.
+
+---
+
+##  Melhorias Futuras
+
+- Frontend em React
+- Dashboard administrativo
+- Dockerização da aplicação
+- Deploy em nuvem
+- Testes unitários e integração
+- Recuperação de senha
+- Controle de perfis de usuário
+
+---
+
+##  Autor
+
+ABRAAO CEZAR INACIO LEOPOLDINO
+
+GitHub:
+https://github.com/cezarbtw
+
+LinkedIn:
+(adicione seu LinkedIn aqui)
