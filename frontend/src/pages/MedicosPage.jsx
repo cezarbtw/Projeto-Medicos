@@ -77,36 +77,58 @@ export function MedicosPage({ showToast }) {
   };
 
   const save = async () => {
+    const crmClean = String(form.crm || '').replace(/\D/g, '').slice(0, 6);
+    if (!form.nome?.trim()) {
+      showToast('O nome do médico é obrigatório.');
+      return;
+    }
+    if (modal === 'new' && (!crmClean || crmClean.length < 4)) {
+      showToast('CRM deve conter entre 4 e 6 dígitos numéricos.');
+      return;
+    }
+    if (modal === 'new' && !form.email?.includes('@')) {
+      showToast('Informe um e-mail válido.');
+      return;
+    }
+
+    const cepClean = String(form.endereco?.cep || '12345678').replace(/\D/g, '').padEnd(8, '0').slice(0, 8);
+    const enderecoSanitized = {
+      logradouro: form.endereco?.logradouro || 'Rua Principal',
+      bairro: form.endereco?.bairro || 'Centro',
+      cep: cepClean,
+      cidade: form.endereco?.cidade || 'São Paulo',
+      uf: (form.endereco?.uf || 'SP').slice(0, 2).toUpperCase(),
+      numero: form.endereco?.numero || '100',
+      complemento: form.endereco?.complemento || '',
+    };
+
     try {
       if (modal === 'new') {
         const payload = {
-          nome: form.nome,
-          email: form.email,
-          telefone: form.telefone,
-          crm: String(form.crm).replace(/\D/g, '').slice(0, 6),
-          especialidade: form.especialidade,
-          endereco: form.endereco,
+          nome: form.nome.trim(),
+          email: form.email.trim(),
+          telefone: form.telefone || '(11) 99999-0000',
+          crm: crmClean,
+          especialidade: form.especialidade || 'CARDIOLOGIA',
+          endereco: enderecoSanitized,
         };
-        const novo = await api.post('/medicos', payload).catch(() => ({
-          ...form,
-          id: Date.now(),
-        }));
+        const novo = await api.post('/medicos', payload);
         setMedicos((prev) => [...prev, novo]);
         showToast('Médico cadastrado com sucesso!');
       } else {
         const payload = {
           id: form.id,
-          nome: form.nome,
+          nome: form.nome.trim(),
           telefone: form.telefone,
-          endereco: form.endereco,
+          endereco: enderecoSanitized,
         };
-        const upd = await api.put('/medicos', payload).catch(() => form);
+        const upd = await api.put(`/medicos/${form.id}`, payload);
         setMedicos((prev) => prev.map((m) => (m.id === form.id ? { ...m, ...upd } : m)));
         showToast('Médico atualizado com sucesso!');
       }
       setModal(null);
     } catch (err) {
-      showToast('Erro ao salvar médico: ' + (err.message || 'Verifique os dados'));
+      showToast(err.message || 'Erro ao salvar médico. Verifique os dados.');
     }
   };
 

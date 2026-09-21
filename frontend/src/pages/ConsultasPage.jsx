@@ -83,41 +83,43 @@ export function ConsultasPage({ showToast }) {
 
   const save = async () => {
     if (!form.idPaciente) {
-      showToast('Selecione um paciente');
+      showToast('Selecione um paciente para a consulta.');
       return;
     }
     if (!form.data) {
-      showToast('Selecione data e hora');
+      showToast('Selecione a data e o horário da consulta.');
       return;
     }
+
+    const dataIso = form.data.length === 16 ? `${form.data}:00` : form.data;
 
     try {
       const payload = {
         idMedico: form.idMedico ? Number(form.idMedico) : null,
         idPaciente: Number(form.idPaciente),
-        data: form.data,
-        especialidade: form.idMedico ? null : form.especialidade,
+        data: dataIso,
+        especialidade: form.idMedico ? null : form.especialidade || 'CARDIOLOGIA',
       };
 
-      const res = await api.post('/consultas', payload).catch(() => {
-        const med = medicos.find((m) => m.id === Number(form.idMedico));
-        const pac = pacientes.find((p) => p.id === Number(form.idPaciente));
-        return {
-          id: Date.now(),
-          idMedico: form.idMedico,
-          medicoNome: med?.nome || 'Médico Selecionado',
-          idPaciente: form.idPaciente,
-          pacienteNome: pac?.nome || 'Paciente Selecionado',
-          data: form.data,
-          status: 'AGENDADA',
-        };
-      });
+      const res = await api.post('/consultas', payload);
+      const med = medicos.find((m) => m.id === Number(res.idMedico || payload.idMedico));
+      const pac = pacientes.find((p) => p.id === Number(res.idPaciente || payload.idPaciente));
 
-      setConsultas((prev) => [res, ...prev]);
+      const consultaFormatada = {
+        id: res.id || Date.now(),
+        idMedico: res.idMedico || payload.idMedico,
+        medicoNome: med?.nome || res.medicoNome || 'Médico Designado',
+        idPaciente: res.idPaciente || payload.idPaciente,
+        pacienteNome: pac?.nome || res.pacienteNome || 'Paciente',
+        data: res.data || payload.data,
+        status: 'AGENDADA',
+      };
+
+      setConsultas((prev) => [consultaFormatada, ...prev]);
       showToast('Consulta agendada com sucesso!');
       setModal(false);
     } catch (err) {
-      showToast('Erro ao agendar consulta: ' + (err.message || 'Verifique horário de funcionamento'));
+      showToast(err.message || 'Erro ao agendar consulta. Verifique antecedência e horário de funcionamento.');
     }
   };
 
@@ -133,13 +135,9 @@ export function ConsultasPage({ showToast }) {
         prev.map((c) => (c.id === cancelModal.id ? { ...c, status: 'CANCELADA' } : c))
       );
       showToast('Consulta cancelada com sucesso.');
-    } catch {
-      setConsultas((prev) =>
-        prev.map((c) => (c.id === cancelModal.id ? { ...c, status: 'CANCELADA' } : c))
-      );
-      showToast('Consulta cancelada.');
-    } finally {
       setCancelModal(null);
+    } catch (err) {
+      showToast(err.message || 'Erro ao cancelar consulta.');
     }
   };
 
@@ -345,10 +343,10 @@ export function ConsultasPage({ showToast }) {
                     <td>
                       <span
                         className={`badge ${status === 'REALIZADA'
-                            ? 'badge-green'
-                            : isCancelada
-                              ? 'badge-red'
-                              : 'badge-blue'
+                          ? 'badge-green'
+                          : isCancelada
+                            ? 'badge-red'
+                            : 'badge-blue'
                           }`}
                       >
                         {status}

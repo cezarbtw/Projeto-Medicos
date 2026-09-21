@@ -38,9 +38,22 @@ public class PacienteController {
 
     @PutMapping
     @Transactional
-    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoPaciente dados) {
+    public ResponseEntity atualizar(@RequestBody DadosAtualizacaoPaciente dados) {
+        if (dados.id() == null) {
+            return ResponseEntity.badRequest().body("ID do paciente é obrigatório no corpo da requisição!");
+        }
         var paciente = repository.getReferenceById(dados.id());
         paciente.atualizarInformacoes(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+    }
+
+    @PutMapping("/{id}")
+    @Transactional
+    public ResponseEntity atualizarPorId(@PathVariable Long id, @RequestBody DadosAtualizacaoPaciente dados) {
+        var dadosComId = new DadosAtualizacaoPaciente(id, dados.nome(), dados.telefone(), dados.endereco());
+        var paciente = repository.getReferenceById(id);
+        paciente.atualizarInformacoes(dadosComId);
 
         return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
     }

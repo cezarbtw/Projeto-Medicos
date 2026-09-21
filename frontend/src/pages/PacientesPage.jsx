@@ -76,35 +76,59 @@ export function PacientesPage({ showToast }) {
   };
 
   const save = async () => {
+    if (!form.nome?.trim()) {
+      showToast('O nome do paciente é obrigatório.');
+      return;
+    }
+
+    const cpfDigits = String(form.cpf || '').replace(/\D/g, '');
+    if (modal === 'new' && cpfDigits.length !== 11) {
+      showToast('O CPF deve conter exatamente 11 dígitos.');
+      return;
+    }
+
+    if (modal === 'new' && !form.email?.includes('@')) {
+      showToast('Informe um e-mail válido.');
+      return;
+    }
+
+    const cepClean = String(form.endereco?.cep || '12345678').replace(/\D/g, '').padEnd(8, '0').slice(0, 8);
+    const enderecoSanitized = {
+      logradouro: form.endereco?.logradouro || 'Avenida Brasil',
+      bairro: form.endereco?.bairro || 'Jardins',
+      cep: cepClean,
+      cidade: form.endereco?.cidade || 'São Paulo',
+      uf: (form.endereco?.uf || 'SP').slice(0, 2).toUpperCase(),
+      numero: form.endereco?.numero || '50',
+      complemento: form.endereco?.complemento || '',
+    };
+
     try {
       if (modal === 'new') {
         const payload = {
-          nome: form.nome,
-          email: form.email,
-          telefone: form.telefone,
-          cpf: formatCpf(form.cpf || '12345678900'),
-          endereco: form.endereco,
+          nome: form.nome.trim(),
+          email: form.email.trim(),
+          telefone: form.telefone || '(11) 98888-0000',
+          cpf: formatCpf(cpfDigits),
+          endereco: enderecoSanitized,
         };
-        const novo = await api.post('/pacientes', payload).catch(() => ({
-          ...form,
-          id: Date.now(),
-        }));
+        const novo = await api.post('/pacientes', payload);
         setPacientes((prev) => [...prev, novo]);
         showToast('Paciente cadastrado com sucesso!');
       } else {
         const payload = {
           id: form.id,
-          nome: form.nome,
+          nome: form.nome.trim(),
           telefone: form.telefone,
-          endereco: form.endereco,
+          endereco: enderecoSanitized,
         };
-        const upd = await api.put('/pacientes', payload).catch(() => form);
+        const upd = await api.put(`/pacientes/${form.id}`, payload);
         setPacientes((prev) => prev.map((x) => (x.id === form.id ? { ...x, ...upd } : x)));
         showToast('Paciente atualizado com sucesso!');
       }
       setModal(null);
     } catch (err) {
-      showToast('Erro ao salvar paciente: ' + (err.message || 'Verifique os dados'));
+      showToast(err.message || 'Erro ao salvar paciente. Verifique os dados.');
     }
   };
 

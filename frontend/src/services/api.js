@@ -33,14 +33,26 @@ async function request(path, options = {}) {
 
   if (!response.ok) {
     let errorData = null;
+    let message = response.statusText || 'Erro na requisição';
     try {
-      errorData = await response.json();
+      const text = await response.text();
+      try {
+        errorData = JSON.parse(text);
+        if (Array.isArray(errorData)) {
+          message = errorData.map((e) => `${e.campo || 'campo'}: ${e.mensagem || 'inválido'}`).join(' | ');
+        } else if (errorData && errorData.message) {
+          message = errorData.message;
+        } else if (typeof errorData === 'string') {
+          message = errorData;
+        }
+      } catch {
+        errorData = text;
+        if (text) message = text;
+      }
     } catch {
       errorData = response.statusText;
     }
-    const error = new Error(
-      (errorData && errorData.message) || response.statusText || 'Erro na requisição'
-    );
+    const error = new Error(message);
     error.status = response.status;
     error.data = errorData;
     throw error;
