@@ -22,11 +22,16 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import med.voll.api.domain.consulta.ConsultaRepository;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
+@ActiveProfiles("test")
 class ConsultaControllerTest {
 
     @Autowired
@@ -40,6 +45,9 @@ class ConsultaControllerTest {
 
     @MockBean
     private AgendaDeConsultas agendaDeConsultas;
+
+    @MockBean
+    private ConsultaRepository consultaRepository;
 
     @Test
     @DisplayName("Deveria devolver codigo http 400 quando informacoes estao invalidas")
@@ -78,6 +86,19 @@ class ConsultaControllerTest {
         ).getJson();
 
         assertThat(response.getContentAsString()).isEqualTo(jsonEsperado);
+    }
+
+    @Test
+    @DisplayName("Deveria devolver codigo http 200 ao listar consultas")
+    @WithMockUser
+    void listar_cenario1() throws Exception {
+        when(consultaRepository.findAll(any(org.springframework.data.domain.Pageable.class)))
+                .thenReturn(org.springframework.data.domain.Page.empty());
+
+        var response = mvc.perform(get("/consultas"))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
     }
 
 }
