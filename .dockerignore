@@ -1,0 +1,6 @@
+frontend
+target
+.git
+.mvn
+node_modules
+*.log
