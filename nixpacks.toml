@@ -1,0 +1,9 @@
+# Configuração para o Nixpacks (caso o Railway use o builder padrão)
+[phases.setup]
+nixPkgs = ["jdk17", "maven"]
+
+[phases.build]
+cmds = ["mvn clean package -DskipTests"]
+
+[start]
+cmd = "java -Dserver.port=$PORT -jar target/*.jar"
