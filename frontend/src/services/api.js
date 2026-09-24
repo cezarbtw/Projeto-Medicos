@@ -1,4 +1,10 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+let rawBase = (import.meta.env.VITE_API_URL || '').trim();
+if (!rawBase) {
+  rawBase = '/api';
+} else if (!rawBase.startsWith('http://') && !rawBase.startsWith('https://') && !rawBase.startsWith('/')) {
+  rawBase = `https://${rawBase}`;
+}
+const API_BASE = rawBase.replace(/\/+$/, '');
 
 export const TOKEN_STORAGE_KEY = 'vollmed_jwt_token';
 export const USER_STORAGE_KEY = 'vollmed_user';
