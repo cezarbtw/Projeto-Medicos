@@ -347,7 +347,7 @@ export function MedicosPage({ showToast }) {
                     {m.crm}
                   </td>
                   <td>
-                    <span className="badge badge-blue">{m.especialidade || '—'}</span>
+                    <span className="badge badge-indigo">{m.especialidade || '—'}</span>
                   </td>
                   <td style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>
                     {m.email || '—'}

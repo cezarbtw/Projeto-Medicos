@@ -86,13 +86,13 @@ export function DashboardPage() {
     <div>
       <div className="stats-grid">
         {[
-          { type: 'medicos', label: 'Médicos', value: counts.medicos, color: 'var(--primary)' },
-          { type: 'pacientes', label: 'Pacientes', value: counts.pacientes, color: '#1565c0' },
-          { type: 'consultas', label: 'Consultas', value: counts.consultas, color: '#b35c00' },
-          { type: 'realizadas', label: 'Realizadas', value: counts.realizadas, color: 'var(--success)' },
+          { type: 'medicos', label: 'Médicos Cadastrados', value: counts.medicos, color: 'var(--primary)', bg: 'var(--primary-surface)', border: 'var(--primary-border)' },
+          { type: 'pacientes', label: 'Pacientes Ativos', value: counts.pacientes, color: 'var(--accent)', bg: 'var(--accent-surface)', border: 'var(--accent-border)' },
+          { type: 'consultas', label: 'Total de Consultas', value: counts.consultas, color: 'var(--warning)', bg: 'var(--warning-light)', border: 'var(--warning-border)' },
+          { type: 'realizadas', label: 'Consultas Realizadas', value: counts.realizadas, color: 'var(--success)', bg: 'var(--success-light)', border: 'var(--success-border)' },
         ].map((s) => (
           <div key={s.label} className="stat-card">
-            <div className="stat-icon" style={{ color: s.color }}>
+            <div className="stat-icon" style={{ color: s.color, background: s.bg, borderColor: s.border }}>
               <StatIcon type={s.type} />
             </div>
             <div className="stat-value" style={{ color: s.color }}>
@@ -145,7 +145,7 @@ export function DashboardPage() {
                           ? 'badge-green'
                           : status === 'CANCELADA'
                             ? 'badge-red'
-                            : 'badge-blue'
+                            : 'badge-indigo'
                         }`}
                     >
                       {status}
@@ -163,7 +163,7 @@ export function DashboardPage() {
           </div>
           <div style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 14 }}>
             {[
-              { label: 'Agendadas', key: 'AGENDADA', color: '#1565c0' },
+              { label: 'Agendadas', key: 'AGENDADA', color: 'var(--primary)' },
               { label: 'Realizadas', key: 'REALIZADA', color: 'var(--success)' },
               { label: 'Canceladas', key: 'CANCELADA', color: 'var(--danger)' },
             ].map(({ label, key, color }) => {

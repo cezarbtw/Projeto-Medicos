@@ -317,10 +317,7 @@ export function ConsultasPage({ showToast }) {
                   <tr key={c.id}>
                     <td>
                       <div className="cell-name">
-                        <div
-                          className="avatar"
-                          style={{ background: 'linear-gradient(135deg, #5ab4f0, #1565c0)' }}
-                        >
+                        <div className="avatar">
                           {initials(c.pacienteNome || 'Paciente')}
                         </div>
                         <strong>{c.pacienteNome || 'Paciente'}</strong>
@@ -346,7 +343,7 @@ export function ConsultasPage({ showToast }) {
                           ? 'badge-green'
                           : isCancelada
                             ? 'badge-red'
-                            : 'badge-blue'
+                            : 'badge-indigo'
                           }`}
                       >
                         {status}

@@ -320,10 +320,7 @@ export function PacientesPage({ showToast }) {
                 <tr key={p.id}>
                   <td>
                     <div className="cell-name">
-                      <div
-                        className="avatar"
-                        style={{ background: 'linear-gradient(135deg, #5ab4f0, #1565c0)' }}
-                      >
+                      <div className="avatar">
                         {initials(p.nome)}
                       </div>
                       <strong>{p.nome}</strong>

@@ -59,8 +59,8 @@ export function LoginPage() {
               <path d="M9 12h6m-3-3v6M12 3a9 9 0 1 0 0 18A9 9 0 0 0 12 3z" />
             </svg>
           </div>
-          <h1>Voll.med / MediClin</h1>
-          <p>{mode === 'login' ? 'Acesse o sistema com suas credenciais' : 'Crie sua conta para acessar o sistema'}</p>
+          <h1>MediClin</h1>
+          <p>{mode === 'login' ? 'Gestão Clínica & Hospitalar · Acesse sua conta' : 'Crie sua conta de acesso ao sistema'}</p>
         </div>
 
         {/* Alternador de Abas */}
