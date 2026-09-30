@@ -135,7 +135,6 @@ export function LobbyPage({ onNavigate }) {
         <div className="lobby-hero-actions">
           <button
             className="btn btn-primary"
-            style={{ background: '#ffffff', color: 'var(--primary)', borderColor: '#ffffff', boxShadow: '0 8px 16px rgba(0,0,0,0.1)' }}
             onClick={() => onNavigate && onNavigate('consultas')}
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -146,7 +145,6 @@ export function LobbyPage({ onNavigate }) {
           </button>
           <button
             className="btn btn-outline"
-            style={{ background: 'rgba(255,255,255,0.12)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.3)' }}
             onClick={() => onNavigate && onNavigate('dashboard')}
           >
             Ver Painel Clínico
@@ -273,19 +271,19 @@ export function LobbyPage({ onNavigate }) {
           </div>
 
           {/* Plantão de Emergência & Links Rápidos */}
-          <div className="card" style={{ background: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)', color: '#ffffff', borderColor: '#334155' }}>
+          <div className="card" style={{ background: 'linear-gradient(135deg, #ffffff 0%, #fff7f7 100%)', borderColor: '#fecaca', boxShadow: 'var(--shadow-sm)' }}>
             <div style={{ padding: 22 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-                <div style={{ width: 36, height: 36, borderRadius: 10, background: 'rgba(239, 68, 68, 0.2)', color: '#f87171', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
+                <div style={{ width: 36, height: 36, borderRadius: 10, background: '#fee2e2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>
                   🚨
                 </div>
                 <div>
-                  <h4 style={{ fontSize: 15, fontWeight: 700, color: '#ffffff' }}>Central de Emergência & SAMU</h4>
-                  <small style={{ color: '#94a3b8' }}>Acionamento rápido 24 horas</small>
+                  <h4 style={{ fontSize: 15, fontWeight: 700, color: '#991b1b' }}>Central de Emergência & SAMU</h4>
+                  <small style={{ color: '#b91c1c' }}>Acionamento rápido 24 horas</small>
                 </div>
               </div>
 
-              <p style={{ fontSize: 12.5, color: '#cbd5e1', lineHeight: 1.5, marginBottom: 16 }}>
+              <p style={{ fontSize: 12.5, color: '#7f1d1d', lineHeight: 1.5, marginBottom: 16 }}>
                 Linha direta com o centro de triagem avançado para encaminhamento prioritário de ambulâncias e leitos de choque.
               </p>
 
@@ -300,7 +298,7 @@ export function LobbyPage({ onNavigate }) {
                 <button
                   type="button"
                   className="btn btn-outline btn-sm"
-                  style={{ background: 'transparent', color: '#ffffff', borderColor: 'rgba(255,255,255,0.25)' }}
+                  style={{ background: '#ffffff', borderColor: '#fca5a5', color: '#991b1b' }}
                   onClick={() => alert('Ramal Interno de Emergência: 1001 / Código Azul: 1002')}
                 >
                   Ramais Internos

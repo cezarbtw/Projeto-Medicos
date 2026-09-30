@@ -22,14 +22,14 @@
   --text-muted: #64748b;
   --text-light: #94a3b8;
 
-  /* Sidebar - Sleek Midnight Slate */
-  --sidebar-bg: #0f172a;
-  --sidebar-border: #1e293b;
-  --sidebar-text: #94a3b8;
-  --sidebar-text-hover: #f8fafc;
-  --sidebar-text-active: #ffffff;
-  --sidebar-item-hover: rgba(255, 255, 255, 0.05);
-  --sidebar-item-active: rgba(79, 70, 229, 0.25);
+  /* Sidebar - Minimalist Light & Monochromatic */
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-text: #64748b;
+  --sidebar-text-hover: #0f172a;
+  --sidebar-text-active: #4f46e5;
+  --sidebar-item-hover: #f8fafc;
+  --sidebar-item-active: #eef2ff;
 
   /* Status & Semantics */
   --success: #10b981;
@@ -86,7 +86,7 @@ body {
 }
 
 .sidebar-logo {
-  padding: 24px 20px 20px;
+  padding: 22px 20px 20px;
   border-bottom: 1px solid var(--sidebar-border);
   display: flex;
   align-items: center;
@@ -103,21 +103,21 @@ body {
   justify-content: center;
   color: #fff;
   flex-shrink: 0;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
 }
 
 .sidebar-logo-text h1 {
-  font-size: 19px;
+  font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: var(--text);
   letter-spacing: -0.4px;
   line-height: 1.2;
 }
 
 .sidebar-logo-text span {
   font-size: 11px;
-  color: var(--sidebar-text);
-  font-weight: 500;
+  color: var(--text-muted);
+  font-weight: 600;
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -135,7 +135,7 @@ body {
   font-weight: 700;
   letter-spacing: 1.2px;
   text-transform: uppercase;
-  color: #475569;
+  color: #94a3b8;
   padding: 14px 12px 6px;
 }
 
@@ -164,14 +164,14 @@ body {
 
 .nav-item.active {
   background: var(--sidebar-item-active);
-  color: #ffffff;
-  border-color: rgba(99, 102, 241, 0.35);
-  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.15);
+  color: var(--sidebar-text-active);
+  border-color: #c7d2fe;
+  box-shadow: 0 1px 3px rgba(79, 70, 229, 0.08);
   font-weight: 600;
 }
 
 .nav-item.active .icon {
-  color: #818cf8;
+  color: var(--primary);
 }
 
 .nav-item .icon {
@@ -189,14 +189,14 @@ body {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: rgba(0, 0, 0, 0.12);
+  background: #f8fafc;
 }
 
 .sidebar-user {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #fff;
+  color: var(--text);
   font-size: 13px;
 }
 
@@ -223,12 +223,12 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #f8fafc;
+  color: var(--text);
   font-weight: 600;
 }
 
 .sidebar-user .user-info small {
-  color: var(--sidebar-text);
+  color: var(--text-muted);
   font-size: 11px;
 }
 
@@ -961,18 +961,18 @@ tr:hover .tag-actions {
    Lobby & Hospital Network Page Styles
    ========================================================================== */
 .lobby-hero {
-  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #f6f8fc 50%, #eef2ff 100%);
   border-radius: 20px;
-  padding: 36px 36px 32px;
-  color: #ffffff;
+  padding: 34px 34px 30px;
+  color: var(--text);
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   gap: 24px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid #e0e7ff;
 }
 
 .lobby-hero::before {
@@ -980,9 +980,9 @@ tr:hover .tag-actions {
   position: absolute;
   top: -50px;
   right: -50px;
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(14, 165, 233, 0.25) 0%, transparent 70%);
+  width: 320px;
+  height: 320px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -997,14 +997,14 @@ tr:hover .tag-actions {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
   padding: 5px 12px;
   border-radius: 9999px;
   font-size: 11.5px;
   font-weight: 600;
-  color: #e0e7ff;
+  color: var(--primary);
   margin-bottom: 16px;
   letter-spacing: 0.3px;
 }
@@ -1014,7 +1014,7 @@ tr:hover .tag-actions {
   height: 8px;
   border-radius: 50%;
   background: #10b981;
-  box-shadow: 0 0 10px #10b981;
+  box-shadow: 0 0 8px #10b981;
   animation: pulse 1.5s infinite;
 }
 
@@ -1036,7 +1036,7 @@ tr:hover .tag-actions {
 .lobby-hero h1 {
   font-size: 26px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text);
   letter-spacing: -0.6px;
   line-height: 1.25;
   margin-bottom: 10px;
@@ -1044,7 +1044,7 @@ tr:hover .tag-actions {
 
 .lobby-hero p {
   font-size: 14px;
-  color: #cbd5e1;
+  color: var(--text-muted);
   line-height: 1.55;
   margin-bottom: 24px;
 }
@@ -1065,14 +1065,14 @@ tr:hover .tag-actions {
 .lobby-metric strong {
   font-size: 20px;
   font-weight: 800;
-  color: #ffffff;
+  color: var(--text);
   letter-spacing: -0.4px;
 }
 
 .lobby-metric span {
   font-size: 11px;
-  color: #94a3b8;
-  font-weight: 500;
+  color: var(--text-muted);
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -1080,7 +1080,7 @@ tr:hover .tag-actions {
 .lobby-metric-divider {
   width: 1px;
   height: 28px;
-  background: rgba(255, 255, 255, 0.15);
+  background: var(--border);
 }
 
 .lobby-hero-actions {

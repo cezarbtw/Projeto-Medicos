@@ -99,7 +99,7 @@ export function Sidebar({ currentPage, onNavigate }) {
         <button
           className="btn btn-outline btn-sm"
           onClick={logout}
-          style={{ width: '100%', justifyContent: 'center', borderColor: 'rgba(255,255,255,0.2)', color: '#fff' }}
+          style={{ width: '100%', justifyContent: 'center' }}
         >
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
