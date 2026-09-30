@@ -18,59 +18,46 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class PacienteController {
 
     @Autowired
-    private PacienteRepository repository;
+    private PacienteService service;
 
     @PostMapping
-    @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroPaciente dados, UriComponentsBuilder uriBuilder) {
-        var paciente = new Paciente(dados);
-        repository.save(paciente);
-
+        var paciente = service.cadastrar(dados);
         var uri = uriBuilder.path("/pacientes/{id}").buildAndExpand(paciente.getId()).toUri();
         return ResponseEntity.created(uri).body(new DadosDetalhamentoPaciente(paciente));
     }
 
     @GetMapping
     public ResponseEntity<Page<DadosListagemPaciente>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
-        var page = repository.findAllByAtivoTrue(paginacao).map(DadosListagemPaciente::new);
+        var page = service.listar(paginacao);
         return ResponseEntity.ok(page);
     }
 
     @PutMapping
-    @Transactional
     public ResponseEntity atualizar(@RequestBody DadosAtualizacaoPaciente dados) {
         if (dados.id() == null) {
             return ResponseEntity.badRequest().body("ID do paciente é obrigatório no corpo da requisição!");
         }
-        var paciente = repository.getReferenceById(dados.id());
-        paciente.atualizarInformacoes(dados);
-
-        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+        var detalhamento = service.atualizar(dados);
+        return ResponseEntity.ok(detalhamento);
     }
 
     @PutMapping("/{id}")
-    @Transactional
     public ResponseEntity atualizarPorId(@PathVariable Long id, @RequestBody DadosAtualizacaoPaciente dados) {
-        var dadosComId = new DadosAtualizacaoPaciente(id, dados.nome(), dados.telefone(), dados.endereco());
-        var paciente = repository.getReferenceById(id);
-        paciente.atualizarInformacoes(dadosComId);
-
-        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+        var detalhamento = service.atualizarPorId(id, dados);
+        return ResponseEntity.ok(detalhamento);
     }
 
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity excluir(@PathVariable Long id) {
-        var paciente = repository.getReferenceById(id);
-        paciente.excluir();
-
+        service.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity detalhar(@PathVariable Long id) {
-        var paciente = repository.getReferenceById(id);
-        return ResponseEntity.ok(new DadosDetalhamentoPaciente(paciente));
+        var detalhamento = service.detalhar(id);
+        return ResponseEntity.ok(detalhamento);
     }
 
 

@@ -94,15 +94,16 @@ Existem divergências entre os dados que o frontend envia e os dados que a API S
 
 - **Tipo:** `refactor`, `backend`
 - **Prioridade:** Média
+- **Status:** ✅ Concluída
 
 ### Descrição
 Atualmente, `MedicoController` e `PacienteController` interagem diretamente com os repositórios JPA e contêm lógica de manipulação de entidades nos métodos de controller. Para manter a coerência arquitetural do projeto (que já utiliza `AgendaDeConsultas` para gerenciar regras de consulta), deve-se introduzir classes de serviço dedicadas.
 
 ### Tarefas
-- [ ] Criar `MedicoService` para encapsular cadastro, listagem, atualização, inativação e regras de negócio de médicos.
-- [ ] Criar `PacienteService` para encapsular cadastro, listagem, atualização e inativação de pacientes.
-- [ ] Injetar as classes de Service nos respectivos Controllers, mantendo os Controllers enxutos e focados apenas no transporte HTTP.
-- [ ] Garantir que o tratamento de exceções de negócio continue sendo capturado pelo `TratadorDeErros`.
+- [x] Criar `MedicoService` para encapsular cadastro, listagem, atualização, inativação e regras de negócio de médicos.
+- [x] Criar `PacienteService` para encapsular cadastro, listagem, atualização e inativação de pacientes.
+- [x] Injetar as classes de Service nos respectivos Controllers, mantendo os Controllers enxutos e focados apenas no transporte HTTP.
+- [x] Garantir que o tratamento de exceções de negócio continue sendo capturado pelo `TratadorDeErros`.
 
 ### Critérios de Aceite
 - Nenhum repositório de médico ou paciente deve ser injetado diretamente em controllers.
