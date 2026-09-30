@@ -5,7 +5,7 @@ import { StatIcon } from '../components/StatIcon';
 const initials = (name = '') =>
   name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
 
-export function DashboardPage() {
+export function DashboardPage({ onNavigate }) {
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState({
     medicos: 0,
@@ -192,6 +192,63 @@ export function DashboardPage() {
               );
             })}
           </div>
+        </div>
+      </div>
+
+      {/* Ações Rápidas de Gestão */}
+      <div className="card" style={{ marginTop: 24, padding: 22, background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+          <div>
+            <h4 style={{ fontSize: 15, fontWeight: 700, color: 'var(--text)' }}>Ações Rápidas do Sistema</h4>
+            <p style={{ fontSize: 12.5, color: 'var(--text-muted)' }}>Atalhos imediatos para as rotinas operacionais mais frequentes</p>
+          </div>
+          <span className="badge badge-sky">Atalhos Clínicos</span>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 14 }}>
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ padding: '14px', flexDirection: 'column', gap: 8, borderRadius: 12, border: '1px solid var(--border)', background: '#ffffff', textAlign: 'center' }}
+            onClick={() => onNavigate && onNavigate('consultas')}
+          >
+            <span style={{ fontSize: 24 }}>📅</span>
+            <strong style={{ fontSize: 13, color: 'var(--text)' }}>Agendar Consulta</strong>
+            <small style={{ fontSize: 11, color: 'var(--text-muted)' }}>Marcar novo horário</small>
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ padding: '14px', flexDirection: 'column', gap: 8, borderRadius: 12, border: '1px solid var(--border)', background: '#ffffff', textAlign: 'center' }}
+            onClick={() => onNavigate && onNavigate('medicos')}
+          >
+            <span style={{ fontSize: 24 }}>🩺</span>
+            <strong style={{ fontSize: 13, color: 'var(--text)' }}>Cadastrar Médico</strong>
+            <small style={{ fontSize: 11, color: 'var(--text-muted)' }}>Adicionar profissional</small>
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ padding: '14px', flexDirection: 'column', gap: 8, borderRadius: 12, border: '1px solid var(--border)', background: '#ffffff', textAlign: 'center' }}
+            onClick={() => onNavigate && onNavigate('pacientes')}
+          >
+            <span style={{ fontSize: 24 }}>👥</span>
+            <strong style={{ fontSize: 13, color: 'var(--text)' }}>Novo Paciente</strong>
+            <small style={{ fontSize: 11, color: 'var(--text-muted)' }}>Cadastrar ficha médica</small>
+          </button>
+
+          <button
+            type="button"
+            className="btn btn-outline"
+            style={{ padding: '14px', flexDirection: 'column', gap: 8, borderRadius: 12, border: '1px solid var(--border)', background: '#ffffff', textAlign: 'center' }}
+            onClick={() => onNavigate && onNavigate('lobby')}
+          >
+            <span style={{ fontSize: 24 }}>📢</span>
+            <strong style={{ fontSize: 13, color: 'var(--text)' }}>Mural da Rede</strong>
+            <small style={{ fontSize: 11, color: 'var(--text-muted)' }}>Ver avisos e unidades</small>
+          </button>
         </div>
       </div>
     </div>

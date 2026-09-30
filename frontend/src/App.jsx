@@ -5,13 +5,14 @@ import { Sidebar } from './components/Sidebar';
 import { Topbar } from './components/Topbar';
 import { Toast } from './components/Toast';
 import { DashboardPage } from './pages/DashboardPage';
+import { LobbyPage } from './pages/LobbyPage';
 import { MedicosPage } from './pages/MedicosPage';
 import { PacientesPage } from './pages/PacientesPage';
 import { ConsultasPage } from './pages/ConsultasPage';
 
 export function App() {
   const { isAuthenticated } = useAuth();
-  const [currentPage, setCurrentPage] = useState('dashboard');
+  const [currentPage, setCurrentPage] = useState('lobby');
   const [toast, setToast] = useState(null);
 
   const showToast = (msg) => {
@@ -24,10 +25,11 @@ export function App() {
   }
 
   const titles = {
-    dashboard: 'Painel Geral e Indicadores',
+    lobby: 'Portal & Mural da Rede Hospitalar',
+    dashboard: 'Painel Geral e Indicadores Clínicos',
     medicos: 'Gerenciamento de Médicos',
     pacientes: 'Gerenciamento de Pacientes',
-    consultas: 'Agendamento e Cancelamento de Consultas',
+    consultas: 'Agendamento e Gestão de Consultas',
   };
 
   return (
@@ -38,7 +40,8 @@ export function App() {
         <Topbar title={titles[currentPage] || 'MediClin'} />
 
         <main className="content">
-          {currentPage === 'dashboard' && <DashboardPage />}
+          {currentPage === 'lobby' && <LobbyPage onNavigate={setCurrentPage} />}
+          {currentPage === 'dashboard' && <DashboardPage onNavigate={setCurrentPage} />}
           {currentPage === 'medicos' && <MedicosPage showToast={showToast} />}
           {currentPage === 'pacientes' && <PacientesPage showToast={showToast} />}
           {currentPage === 'consultas' && <ConsultasPage showToast={showToast} />}
