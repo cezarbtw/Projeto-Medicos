@@ -1,4 +1,6 @@
-# 🩺 Voll Med API
+# 🩺 Voll Med API / MediClin
+
+[![CI](https://github.com/cezarbtw/Projeto-Medicos/actions/workflows/ci.yml/badge.svg)](https://github.com/cezarbtw/Projeto-Medicos/actions/workflows/ci.yml)
 
 API REST desenvolvida com Java e Spring Boot para gerenciamento de médicos, pacientes e consultas médicas.
 

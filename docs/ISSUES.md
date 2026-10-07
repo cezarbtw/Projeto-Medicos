@@ -136,15 +136,16 @@ Configurar o ambiente local atualmente exige que o desenvolvedor tenha MySQL ins
 
 - **Tipo:** `ci/cd`, `devops`
 - **Prioridade:** Média
+- **Status:** ✅ Concluída
 
 ### Descrição
 Automatizar a verificação do código a cada `push` e `pull request`, garantindo que novas alterações não quebrem o build e que todos os testes passem antes do merge.
 
 ### Tarefas
-- [ ] Criar o arquivo `.github/workflows/ci.yml`.
-- [ ] Configurar job para configurar Java 17 (Temurin) e cache de dependências Maven.
-- [ ] Executar serviço de MySQL no workflow ou rodar os testes unitários/mockados via `mvn clean verify`.
-- [ ] Adicionar badge de status de build no `README.md`.
+- [x] Criar o arquivo `.github/workflows/ci.yml`.
+- [x] Configurar job para configurar Java 17 (Temurin) e cache de dependências Maven.
+- [x] Executar serviço de MySQL no workflow ou rodar os testes unitários/mockados via `mvn clean verify`.
+- [x] Adicionar badge de status de build no `README.md`.
 
 ### Critérios de Aceite
 - Pull requests e commits na branch principal disparam o workflow e reportam status verde/vermelho no GitHub.
