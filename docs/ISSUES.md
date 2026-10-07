@@ -115,16 +115,17 @@ Atualmente, `MedicoController` e `PacienteController` interagem diretamente com 
 
 - **Tipo:** `devops`, `enhancement`
 - **Prioridade:** Média
+- **Status:** ✅ Concluída
 
 ### Descrição
 Configurar o ambiente local atualmente exige que o desenvolvedor tenha MySQL instalado e configurado manualmente com usuário/senha compatíveis. O uso de Docker padroniza o ambiente de desenvolvimento e facilita o onboarding e testes.
 
 ### Tarefas
-- [ ] Criar um `Dockerfile` multi-stage para a API Spring Boot (estágio de build com Maven e estágio final leve com `eclipse-temurin:17-jre-alpine`).
-- [ ] Criar um `docker-compose.yml` contendo:
+- [x] Criar um `Dockerfile` multi-stage para a API Spring Boot (estágio de build com Maven e estágio final leve com `eclipse-temurin:17-jre-alpine`).
+- [x] Criar um `docker-compose.yml` contendo:
   - Serviço do MySQL 8 com healthcheck, volume persistente e criação da base `vollmed_api`.
   - Serviço da API dependente do banco de dados, configurando variáveis de ambiente (`SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_PASSWORD`, `JWT_SECRET`).
-- [ ] Adicionar instruções no `README.md` sobre como rodar `docker compose up -d`.
+- [x] Adicionar instruções no `README.md` sobre como rodar `docker compose up -d`.
 
 ### Critérios de Aceite
 - Ao clonar o repositório e executar `docker compose up --build`, a aplicação e o banco iniciam corretamente e as migrations do Flyway rodam sem falhas.

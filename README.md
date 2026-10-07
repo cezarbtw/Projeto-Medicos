@@ -121,45 +121,56 @@ http://localhost:8080/swagger-ui/index.html
 
 ## ⚙️ Como Executar
 
-### Clonar o projeto
+### 🐳 Opção 1: Com Docker Compose (Recomendado)
+
+Com o Docker instalado, você pode subir tanto o banco de dados MySQL quanto a API Spring Boot com um único comando:
+
+```bash
+docker compose up -d --build
+```
+
+O compose configura automaticamente:
+- Container **MySQL 8** com *healthcheck* e volume persistente.
+- Container da **API Spring Boot** com build multi-stage, conectando-se ao banco e rodando as migrações do Flyway.
+
+Para acompanhar os logs da API:
+```bash
+docker compose logs -f api
+```
+
+Para encerrar os serviços:
+```bash
+docker compose down
+```
+
+---
+
+### 💻 Opção 2: Execução Local Tradicional
+
+#### Clonar o projeto
 
 ```bash
 git clone https://github.com/cezarbtw/Projeto-Medicos.git
-```
-
-### Entrar na pasta
-
-```bash
 cd Projeto-Medicos
 ```
 
-### Configurar o banco de dados
+#### Configurar o banco de dados MySQL local
 
-Editar o arquivo:
-
-```properties
-application.properties
-```
-
-Configurando:
+Editar o arquivo `src/main/resources/application.properties`:
 
 ```properties
-spring.datasource.url=
-spring.datasource.username=
-spring.datasource.password=
+spring.datasource.url=jdbc:mysql://localhost/vollmed_api
+spring.datasource.username=seu_usuario
+spring.datasource.password=sua_senha
 ```
 
-### Executar
+#### Executar a aplicação
 
 ```bash
-mvn spring-boot:run
+./mvnw spring-boot:run
 ```
 
-ou executar a classe:
-
-```java
-ApiApplication.java
-```
+ou executar a classe principal `ApiApplication.java` pela sua IDE.
 
 ---
 
