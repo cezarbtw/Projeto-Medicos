@@ -156,21 +156,22 @@ Automatizar a verificação do código a cada `push` e `pull request`, garantind
 
 - **Tipo:** `test`, `quality`
 - **Prioridade:** Média
+- **Status:** ✅ Concluída
 
 ### Descrição
 O projeto possui testes para `ConsultaController`, `MedicoController` e `MedicoRepository`, mas as regras críticas de agendamento/cancelamento (validadores) e o `PacienteController` ainda não possuem cobertura automatizada.
 
 ### Tarefas
-- [ ] Criar testes unitários para os validadores de agendamento:
+- [x] Criar testes unitários para os validadores de agendamento:
   - `ValidadorHorarioFuncionamentoClinicaTest`
   - `ValidadorHorarioAntecedenciaTest`
   - `ValidadorPacienteAtivoTest`
   - `ValidadorMedicoAtivoTest`
   - `ValidadorPacienteSemOutraConsultaNoDiaTest`
   - `ValidadorMedicoComOutraConsultaNoMesmoHorarioTest`
-- [ ] Criar testes para os validadores de cancelamento de consulta.
-- [ ] Criar `PacienteControllerTest` cobrindo cenários de sucesso e validação (HTTP 200, 400).
-- [ ] Criar testes unitários para `TokenService` (geração e validação de token JWT).
+- [x] Criar testes para os validadores de cancelamento de consulta (`ValidadorHorarioAntecedenciaCancelamentoTest`).
+- [x] Criar `PacienteControllerTest` cobrindo cenários de sucesso e validação (HTTP 200, 400).
+- [x] Criar testes unitários para `TokenService` (geração e validação de token JWT).
 
 ### Critérios de Aceite
 - Todos os cenários de erro e sucesso das regras de negócio são validados por testes unitários sem necessidade de subir o banco MySQL.
