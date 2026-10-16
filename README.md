@@ -45,11 +45,12 @@ O projeto implementa autenticação e autorização com JWT, validações de neg
 - Regras de validação para agendamento
 - Controle de horários disponíveis
 
-### Segurança
-- Login de usuários
-- Geração de Token JWT
-- Rotas protegidas
-- Controle de autenticação via Spring Security
+### Segurança & Controle de Acesso
+- Login e cadastro de usuários
+- Geração e validação de Token JWT (Spring Security 6)
+- Controle de perfis de acesso (RBAC): `ADMIN`, `MEDICO` e `RECEPCIONISTA`
+- Recuperação e redefinição de senha com tokens seguros e expiração
+- Proteção de rotas e política de CORS configurada
 
 ---
 
@@ -204,15 +205,22 @@ Adicione aqui uma captura das tabelas e relacionamentos.
 
 ---
 
-##  Melhorias Futuras
-
-- Frontend em React
-- Dashboard administrativo
-- Dockerização da aplicação
-- Deploy em nuvem
-- Testes unitários e integração
-- Recuperação de senha
-- Controle de perfis de usuário
+## 🚀 Melhorias e Roadmap
+ 
+Todas as melhorias inicialmente planejadas foram 100% implementadas:
+ 
+- [x] **Frontend em React**: SPA moderna construída com Vite, React 18, Lobby da rede e interface clínica minimalista.
+- [x] **Dashboard Administrativo**: Indicadores em tempo real, taxa de ocupação, totalizadores e agendamentos imediatos.
+- [x] **Dockerização da Aplicação**: `Dockerfile` multi-stage com otimização de imagem e `docker-compose` integrado ao MySQL 8.
+- [x] **Deploy em Nuvem**: Configuração para Vercel (frontend) e contêineres para Railway / Render / AWS.
+- [x] **Testes Unitários e Integração**: 41 testes automatizados cobrindo validadores de agendamento, cancelamento, regras de autenticação e controllers.
+- [x] **Recuperação de Senha**: Fluxo completo com geração de tokens temporários seguros (expiração em 30 min) e tela interativa de redefinição.
+- [x] **Controle de Perfis de Usuário (RBAC)**: Suporte a perfis `ADMIN`, `MEDICO` e `RECEPCIONISTA` com authorities Spring Security e badges na interface.
+ 
+### 🔮 Próximos Passos (Evolução Futura)
+- Envio de notificações automáticas de consulta por WhatsApp e E-mail.
+- Módulo de Prontuário Eletrônico do Paciente (PEP).
+- Integração de Teleconsulta via WebRTC.
 
 ---
 

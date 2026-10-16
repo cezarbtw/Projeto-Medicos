@@ -1,9 +1,6 @@
 package med.voll.api.controller;
 
-import med.voll.api.domain.usuario.DadosAutenticacao;
-import med.voll.api.domain.usuario.DadosCadastroUsuario;
-import med.voll.api.domain.usuario.Usuario;
-import med.voll.api.domain.usuario.UsuarioRepository;
+import med.voll.api.domain.usuario.*;
 import med.voll.api.infra.security.TokenService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +17,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,6 +39,12 @@ class AutenticacaoControllerTest {
 
     @Autowired
     private JacksonTester<DadosAutenticacao> dadosAutenticacaoJson;
+
+    @Autowired
+    private JacksonTester<DadosSolicitacaoRecuperacao> dadosSolicitacaoRecuperacaoJson;
+
+    @Autowired
+    private JacksonTester<DadosRedefinicaoSenha> dadosRedefinicaoSenhaJson;
 
     @MockBean
     private UsuarioRepository usuarioRepository;
@@ -90,18 +95,19 @@ class AutenticacaoControllerTest {
         var response = mvc.perform(post("/cadastro")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dadosCadastroUsuarioJson.write(
-                                new DadosCadastroUsuario("novo@voll.med", "123456")
+                                new DadosCadastroUsuario("novo@voll.med", "123456", PerfilUsuario.MEDICO)
                         ).getJson()))
                 .andReturn().getResponse();
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.getContentAsString()).contains("token-jwt-mock");
+        assertThat(response.getContentAsString()).contains("MEDICO");
     }
 
     @Test
     @DisplayName("Deveria autenticar com sucesso e devolver token JWT")
     void login_cenario1() throws Exception {
-        var usuario = new Usuario("admin@voll.med", "123456");
+        var usuario = new Usuario("admin@voll.med", "123456", PerfilUsuario.ADMIN);
         var authToken = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
         when(authenticationManager.authenticate(any())).thenReturn(authToken);
         when(tokenService.gerarToken(any())).thenReturn("token-login-mock");
@@ -115,5 +121,73 @@ class AutenticacaoControllerTest {
 
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         assertThat(response.getContentAsString()).contains("token-login-mock");
+        assertThat(response.getContentAsString()).contains("ADMIN");
+    }
+
+    @Test
+    @DisplayName("Deveria retornar 404 ao solicitar recuperacao para login inexistente")
+    void solicitarRecuperacao_cenario1() throws Exception {
+        when(usuarioRepository.findByLogin("inexistente@voll.med")).thenReturn(null);
+
+        var response = mvc.perform(post("/recuperar-senha")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dadosSolicitacaoRecuperacaoJson.write(
+                                new DadosSolicitacaoRecuperacao("inexistente@voll.med")
+                        ).getJson()))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    @DisplayName("Deveria retornar 200 e token ao solicitar recuperacao para usuario existente")
+    void solicitarRecuperacao_cenario2() throws Exception {
+        var usuario = new Usuario("usuario@voll.med", "123456");
+        when(usuarioRepository.findByLogin("usuario@voll.med")).thenReturn(usuario);
+
+        var response = mvc.perform(post("/recuperar-senha")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dadosSolicitacaoRecuperacaoJson.write(
+                                new DadosSolicitacaoRecuperacao("usuario@voll.med")
+                        ).getJson()))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("Código de recuperação gerado");
+        assertThat(response.getContentAsString()).contains("token");
+    }
+
+    @Test
+    @DisplayName("Deveria retornar 400 ao redefinir senha com token inexistente")
+    void redefinirSenha_cenario1() throws Exception {
+        when(usuarioRepository.findByTokenRecuperacao("token-invalido")).thenReturn(Optional.empty());
+
+        var response = mvc.perform(post("/redefinir-senha")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dadosRedefinicaoSenhaJson.write(
+                                new DadosRedefinicaoSenha("token-invalido", "novaSenha123")
+                        ).getJson()))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("Deveria redefinir a senha com sucesso com token valido")
+    void redefinirSenha_cenario2() throws Exception {
+        var usuario = new Usuario("usuario@voll.med", "123456");
+        var token = usuario.gerarTokenRecuperacao();
+        when(usuarioRepository.findByTokenRecuperacao(token)).thenReturn(Optional.of(usuario));
+        when(passwordEncoder.encode("novaSenha123")).thenReturn("$2a$10$novaSenhaCodificada");
+
+        var response = mvc.perform(post("/redefinir-senha")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(dadosRedefinicaoSenhaJson.write(
+                                new DadosRedefinicaoSenha(token, "novaSenha123")
+                        ).getJson()))
+                .andReturn().getResponse();
+
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        assertThat(response.getContentAsString(java.nio.charset.StandardCharsets.UTF_8)).contains("Senha redefinida com sucesso");
     }
 }

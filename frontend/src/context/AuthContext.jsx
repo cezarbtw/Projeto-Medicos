@@ -31,7 +31,10 @@ export function AuthProvider({ children }) {
         throw new Error('Token não retornado pela API');
       }
 
-      const userData = { login: loginName };
+      const userData = {
+        login: data.login || loginName,
+        perfil: data.perfil || 'ADMIN',
+      };
       localStorage.setItem(TOKEN_STORAGE_KEY, jwtToken);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
 
@@ -42,6 +45,8 @@ export function AuthProvider({ children }) {
       let message = 'Falha ao autenticar. Verifique usuário e senha.';
       if (err.data && typeof err.data === 'string') {
         message = err.data;
+      } else if (err.data && err.data.error) {
+        message = err.data.error;
       } else if (err.message) {
         message = err.message;
       }
@@ -51,16 +56,19 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const cadastrar = async (loginName, senha) => {
+  const cadastrar = async (loginName, senha, perfil = 'RECEPCIONISTA') => {
     setLoading(true);
     try {
-      const data = await api.post('/cadastro', { login: loginName, senha });
+      const data = await api.post('/cadastro', { login: loginName, senha, perfil });
       const jwtToken = data.token || data.tokenJWT;
       if (!jwtToken) {
         throw new Error('Conta criada, mas o token não foi retornado pela API.');
       }
 
-      const userData = { login: loginName };
+      const userData = {
+        login: data.login || loginName,
+        perfil: data.perfil || perfil,
+      };
       localStorage.setItem(TOKEN_STORAGE_KEY, jwtToken);
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(userData));
 
@@ -73,6 +81,47 @@ export function AuthProvider({ children }) {
         message = err.data.error;
       } else if (err.data && typeof err.data === 'string') {
         message = err.data;
+      } else if (err.message) {
+        message = err.message;
+      }
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const solicitarRecuperacao = async (loginName) => {
+    setLoading(true);
+    try {
+      const data = await api.post('/recuperar-senha', { login: loginName });
+      return { success: true, mensagem: data.mensagem, token: data.token };
+    } catch (err) {
+      let message = 'Falha ao solicitar recuperação de senha.';
+      if (err.data && err.data.error) {
+        message = err.data.error;
+      } else if (err.data && err.data.mensagem) {
+        message = err.data.mensagem;
+      } else if (err.message) {
+        message = err.message;
+      }
+      return { success: false, error: message };
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const redefinirSenha = async (tokenRecuperacao, novaSenha) => {
+    setLoading(true);
+    try {
+      const data = await api.post('/redefinir-senha', {
+        token: tokenRecuperacao,
+        novaSenha,
+      });
+      return { success: true, mensagem: data.mensagem };
+    } catch (err) {
+      let message = 'Falha ao redefinir senha.';
+      if (err.data && err.data.error) {
+        message = err.data.error;
       } else if (err.message) {
         message = err.message;
       }
@@ -98,6 +147,8 @@ export function AuthProvider({ children }) {
         loading,
         login,
         cadastrar,
+        solicitarRecuperacao,
+        redefinirSenha,
         logout,
       }}
     >
@@ -113,4 +164,3 @@ export function useAuth() {
   }
   return context;
 }
-

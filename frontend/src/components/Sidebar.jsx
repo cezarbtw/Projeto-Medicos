@@ -92,8 +92,13 @@ export function Sidebar({ currentPage, onNavigate }) {
         <div className="sidebar-user">
           <div className="user-avatar">{userInitial}</div>
           <div className="user-info">
-            <strong>{user?.login || 'Usuário'}</strong>
-            <small>Autenticado</small>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+              <strong>{user?.login || 'Usuário'}</strong>
+              <span className={`badge-role badge-role-${(user?.perfil || 'RECEPCIONISTA').toLowerCase()}`}>
+                {user?.perfil || 'ADMIN'}
+              </span>
+            </div>
+            <small>Sessão Ativa</small>
           </div>
         </div>
         <button

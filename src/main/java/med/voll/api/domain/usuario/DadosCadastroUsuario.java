@@ -9,6 +9,17 @@ public record DadosCadastroUsuario(
 
         @NotBlank(message = "A senha é obrigatória")
         @Size(min = 6, message = "A senha deve ter pelo menos 6 caracteres")
-        String senha
+        String senha,
+
+        PerfilUsuario perfil
 ) {
+    public DadosCadastroUsuario(String login, String senha) {
+        this(login, senha, PerfilUsuario.RECEPCIONISTA);
+    }
+
+    public DadosCadastroUsuario {
+        if (perfil == null) {
+            perfil = PerfilUsuario.RECEPCIONISTA;
+        }
+    }
 }
