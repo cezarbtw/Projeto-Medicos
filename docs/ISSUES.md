@@ -18,7 +18,7 @@ Este documento contém o detalhamento passo a passo de todas as issues do projet
 | **#8** | Testes | Ampliar cobertura de testes unitários para validadores e segurança | ✅ Concluída |
 | **#9** | Segurança / Auth | Controle de Perfis de Usuário (RBAC) e Recuperação de Senha | ✅ Concluída |
 | **#10** | Clínica / PEP | Prontuário Eletrônico do Paciente (PEP) e Histórico Clínico | ✅ Concluída |
-| **#11** | Documentos / PDF | Geração e Emissão de Receituário e Atestado Médico em PDF | ⏳ Pendente |
+| **#11** | Documentos / PDF | Geração e Emissão de Receituário e Atestado Médico em PDF | ✅ Concluída |
 | **#12** | Frontend / UX | Visão de Agenda em Calendário Interativo Semanal/Mensal | ⏳ Pendente |
 | **#13** | Notificações | Disparo Automático de E-mails de Confirmação e Cancelamento | ⏳ Pendente |
 | **#14** | Analytics | Métricas Avançadas, Gráficos no Dashboard e Exportação CSV | ⏳ Pendente |
@@ -82,7 +82,7 @@ Em sistemas de gestão hospitalar, o acompanhamento do paciente exige o registro
 
 - **Tipo:** `enhancement`, `frontend`, `clinical`
 - **Prioridade:** Média-Alta
-- **Status:** ⏳ Pendente
+- **Status:** ✅ Concluída
 
 ### Descrição
 Disponibilizar a emissão e o download instantâneo de documentos médicos oficiais em formato PDF (Receituário Médico e Atestado de Comparecimento), formatados em papel timbrado com identidade visual da clínica MediClin, dados do médico (CRM, especialidade), dados do paciente e data da consulta.

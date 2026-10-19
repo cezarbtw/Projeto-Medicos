@@ -1,11 +1,13 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api } from '../services/api';
+import { DocumentoModal } from './DocumentoModal';
 
 export function ProntuarioModal({ paciente, consulta, medicos = [], onClose, showToast }) {
   const [activeTab, setActiveTab] = useState('timeline'); // 'timeline' | 'novo'
   const [prontuarios, setProntuarios] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [documentoItem, setDocumentoItem] = useState(null);
 
   // Form state
   const [idMedico, setIdMedico] = useState(consulta?.idMedico || medicos[0]?.id || '');
@@ -254,6 +256,17 @@ export function ProntuarioModal({ paciente, consulta, medicos = [], onClose, sho
                             <p>{item.observacoes}</p>
                           </div>
                         )}
+
+                        <div style={{ marginTop: 12, paddingTop: 10, borderTop: '1px dashed var(--border)', display: 'flex', justifyContent: 'flex-end' }}>
+                          <button
+                            type="button"
+                            className="btn btn-outline btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}
+                            onClick={() => setDocumentoItem(item)}
+                          >
+                            📄 Emitir Receita / Atestado em PDF
+                          </button>
+                        </div>
                       </div>
                     );
                   })}
@@ -395,6 +408,22 @@ export function ProntuarioModal({ paciente, consulta, medicos = [], onClose, sho
           </button>
         </div>
       </div>
+
+      {documentoItem && (
+        <DocumentoModal
+          consulta={{
+            id: documentoItem.idConsulta,
+            idMedico: documentoItem.idMedico,
+            nomeMedico: documentoItem.nomeMedico,
+            crmMedico: documentoItem.crmMedico,
+            idPaciente: documentoItem.idPaciente || paciente?.id,
+            nomePaciente: documentoItem.nomePaciente || paciente?.nome || pacienteNome,
+            cpfPaciente: paciente?.cpf || '',
+          }}
+          prontuario={documentoItem}
+          onClose={() => setDocumentoItem(null)}
+        />
+      )}
     </div>
   );
 }

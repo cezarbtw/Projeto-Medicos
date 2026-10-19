@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { api, MOCK } from '../services/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ProntuarioModal } from '../components/ProntuarioModal';
+import { DocumentoModal } from '../components/DocumentoModal';
 
 const initials = (name = '') =>
   name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
@@ -30,6 +31,7 @@ export function ConsultasPage({ showToast }) {
   const [motivoCancelamento, setMotivoCancelamento] = useState('PACIENTE_DESISTIU');
   const [form, setForm] = useState({});
   const [prontuarioConsulta, setProntuarioConsulta] = useState(null);
+  const [documentoConsulta, setDocumentoConsulta] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -153,6 +155,16 @@ export function ConsultasPage({ showToast }) {
           paciente={{ id: prontuarioConsulta.idPaciente, nome: prontuarioConsulta.pacienteNome }}
           medicos={medicos}
           onClose={() => setProntuarioConsulta(null)}
+          showToast={showToast}
+        />
+      )}
+
+      {documentoConsulta && (
+        <DocumentoModal
+          consulta={documentoConsulta}
+          paciente={{ id: documentoConsulta.idPaciente, nome: documentoConsulta.pacienteNome }}
+          medico={medicos.find((m) => m.id === documentoConsulta.idMedico)}
+          onClose={() => setDocumentoConsulta(null)}
           showToast={showToast}
         />
       )}
@@ -371,6 +383,16 @@ export function ConsultasPage({ showToast }) {
                             title="Registrar atendimento e evolução médica no prontuário"
                           >
                             🩺 Atendimento
+                          </button>
+                        )}
+                        {!isCancelada && (
+                          <button
+                            className="btn btn-outline btn-sm"
+                            style={{ padding: '4px 9px', fontSize: 11.5 }}
+                            onClick={() => setDocumentoConsulta(c)}
+                            title="Emitir Receituário ou Atestado Médico em PDF"
+                          >
+                            📄 Documento
                           </button>
                         )}
                         {!isCancelada && (
