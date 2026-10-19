@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api, MOCK } from '../services/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ProntuarioModal } from '../components/ProntuarioModal';
 
 const initials = (name = '') =>
   name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
@@ -28,6 +29,7 @@ export function ConsultasPage({ showToast }) {
   const [cancelModal, setCancelModal] = useState(null);
   const [motivoCancelamento, setMotivoCancelamento] = useState('PACIENTE_DESISTIU');
   const [form, setForm] = useState({});
+  const [prontuarioConsulta, setProntuarioConsulta] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -145,6 +147,16 @@ export function ConsultasPage({ showToast }) {
 
   return (
     <div>
+      {prontuarioConsulta && (
+        <ProntuarioModal
+          consulta={prontuarioConsulta}
+          paciente={{ id: prontuarioConsulta.idPaciente, nome: prontuarioConsulta.pacienteNome }}
+          medicos={medicos}
+          onClose={() => setProntuarioConsulta(null)}
+          showToast={showToast}
+        />
+      )}
+
       {cancelModal && (
         <div className="modal-overlay" onClick={() => setCancelModal(null)}>
           <div className="modal" style={{ maxWidth: 420 }} onClick={(e) => e.stopPropagation()}>
@@ -350,14 +362,26 @@ export function ConsultasPage({ showToast }) {
                       </span>
                     </td>
                     <td>
-                      {!isCancelada && (
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => setCancelModal(c)}
-                        >
-                          Cancelar
-                        </button>
-                      )}
+                      <div className="tag-actions">
+                        {!isCancelada && (
+                          <button
+                            className="btn btn-primary btn-sm"
+                            style={{ padding: '4px 9px', fontSize: 11.5 }}
+                            onClick={() => setProntuarioConsulta(c)}
+                            title="Registrar atendimento e evolução médica no prontuário"
+                          >
+                            🩺 Atendimento
+                          </button>
+                        )}
+                        {!isCancelada && (
+                          <button
+                            className="btn btn-danger btn-sm"
+                            onClick={() => setCancelModal(c)}
+                          >
+                            Cancelar
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

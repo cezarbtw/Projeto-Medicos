@@ -17,7 +17,7 @@ Este documento contém o detalhamento passo a passo de todas as issues do projet
 | **#7** | CI/CD | Configurar GitHub Actions para validação e build contínuo | ✅ Concluída |
 | **#8** | Testes | Ampliar cobertura de testes unitários para validadores e segurança | ✅ Concluída |
 | **#9** | Segurança / Auth | Controle de Perfis de Usuário (RBAC) e Recuperação de Senha | ✅ Concluída |
-| **#10** | Clínica / PEP | Prontuário Eletrônico do Paciente (PEP) e Histórico Clínico | ⏳ Pendente |
+| **#10** | Clínica / PEP | Prontuário Eletrônico do Paciente (PEP) e Histórico Clínico | ✅ Concluída |
 | **#11** | Documentos / PDF | Geração e Emissão de Receituário e Atestado Médico em PDF | ⏳ Pendente |
 | **#12** | Frontend / UX | Visão de Agenda em Calendário Interativo Semanal/Mensal | ⏳ Pendente |
 | **#13** | Notificações | Disparo Automático de E-mails de Confirmação e Cancelamento | ⏳ Pendente |
@@ -30,7 +30,7 @@ Este documento contém o detalhamento passo a passo de todas as issues do projet
 
 - **Tipo:** `enhancement`, `backend`, `frontend`
 - **Prioridade:** Alta
-- **Status:** ⏳ Pendente
+- **Status:** ✅ Concluída
 
 ### Descrição
 Em sistemas de gestão hospitalar, o acompanhamento do paciente exige o registro das evoluções médicas realizadas durante as consultas. Atualmente, a consulta é apenas agendada ou cancelada, sem armazenamento de diagnósticos, anamnese ou conduta terapêutica.

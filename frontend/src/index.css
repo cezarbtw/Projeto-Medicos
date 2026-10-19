@@ -1198,3 +1198,95 @@ tr:hover .tag-actions {
   color: #047857;
   border: 1px solid rgba(16, 185, 129, 0.25);
 }
+
+
+/* ==========================================================================
+   Prontuário Eletrônico do Paciente (PEP) Styles
+   ========================================================================== */
+.pep-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: relative;
+}
+
+.pep-entry-card {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.15s ease;
+}
+
+.pep-entry-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: var(--shadow-md);
+}
+
+.pep-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 10px;
+}
+
+.pep-badge-date {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text);
+  background: #f1f5f9;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.pep-vitals-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+
+.pep-vital-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.pep-vital-badge .label {
+  color: var(--text-muted);
+}
+
+.pep-field-block {
+  padding-left: 12px;
+  border-left: 3px solid #cbd5e1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pep-field-block label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: var(--text-muted);
+}
+
+.pep-field-block p {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.5;
+  margin: 0;
+}

@@ -1,25 +1,33 @@
 import { useState, useEffect, useCallback } from 'react';
 import { api, MOCK } from '../services/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
+import { ProntuarioModal } from '../components/ProntuarioModal';
 
 const initials = (name = '') =>
   name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
 
 export function PacientesPage({ showToast }) {
   const [pacientes, setPacientes] = useState([]);
+  const [medicos, setMedicos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(null);
   const [form, setForm] = useState({});
   const [confirm, setConfirm] = useState(null);
+  const [prontuarioPaciente, setProntuarioPaciente] = useState(null);
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await api.get('/pacientes');
-      setPacientes(api.extractData(res));
+      const [resP, resM] = await Promise.allSettled([
+        api.get('/pacientes'),
+        api.get('/medicos'),
+      ]);
+      setPacientes(resP.status === 'fulfilled' ? api.extractData(resP.value) : MOCK.pacientes);
+      setMedicos(resM.status === 'fulfilled' ? api.extractData(resM.value) : MOCK.medicos);
     } catch {
       setPacientes(MOCK.pacientes);
+      setMedicos(MOCK.medicos);
     } finally {
       setLoading(false);
     }
@@ -38,6 +46,8 @@ export function PacientesPage({ showToast }) {
 
   const openNew = () => {
     setForm({
+      tipoSanguineo: 'O+',
+      alergias: '',
       endereco: {
         logradouro: 'Avenida Brasil',
         bairro: 'Jardins',
@@ -54,6 +64,8 @@ export function PacientesPage({ showToast }) {
   const openEdit = (p) => {
     setForm({
       ...p,
+      tipoSanguineo: p.tipoSanguineo || '',
+      alergias: p.alergias || '',
       endereco: p.endereco || {
         logradouro: 'Avenida Brasil',
         bairro: 'Jardins',
@@ -111,6 +123,8 @@ export function PacientesPage({ showToast }) {
           telefone: form.telefone || '(11) 98888-0000',
           cpf: formatCpf(cpfDigits),
           endereco: enderecoSanitized,
+          tipoSanguineo: form.tipoSanguineo || null,
+          alergias: form.alergias?.trim() || null,
         };
         const novo = await api.post('/pacientes', payload);
         setPacientes((prev) => [...prev, novo]);
@@ -121,6 +135,8 @@ export function PacientesPage({ showToast }) {
           nome: form.nome.trim(),
           telefone: form.telefone,
           endereco: enderecoSanitized,
+          tipoSanguineo: form.tipoSanguineo || null,
+          alergias: form.alergias?.trim() || null,
         };
         const upd = await api.put(`/pacientes/${form.id}`, payload);
         setPacientes((prev) => prev.map((x) => (x.id === form.id ? { ...x, ...upd } : x)));
@@ -162,9 +178,18 @@ export function PacientesPage({ showToast }) {
         />
       )}
 
+      {prontuarioPaciente && (
+        <ProntuarioModal
+          paciente={prontuarioPaciente}
+          medicos={medicos}
+          onClose={() => setProntuarioPaciente(null)}
+          showToast={showToast}
+        />
+      )}
+
       {modal && (
         <div className="modal-overlay" onClick={() => setModal(null)}>
-          <div className="modal" style={{ maxWidth: 520 }} onClick={(e) => e.stopPropagation()}>
+          <div className="modal" style={{ maxWidth: 540 }} onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2>{modal === 'new' ? 'Novo Paciente' : 'Editar Paciente'}</h2>
               <button className="close-btn" onClick={() => setModal(null)}>
@@ -201,14 +226,42 @@ export function PacientesPage({ showToast }) {
                 </div>
               </div>
 
+              <div className="form-row">
+                <div className="form-group" style={{ flex: 2 }}>
+                  <label>E-mail *</label>
+                  <input
+                    type="email"
+                    placeholder="paciente@email.com"
+                    value={form.email || ''}
+                    disabled={modal === 'edit'}
+                    onChange={(e) => f('email', e.target.value)}
+                  />
+                </div>
+                <div className="form-group" style={{ flex: 1 }}>
+                  <label>Tipo Sanguíneo</label>
+                  <select
+                    value={form.tipoSanguineo || ''}
+                    onChange={(e) => f('tipoSanguineo', e.target.value)}
+                  >
+                    <option value="">Não informado</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                  </select>
+                </div>
+              </div>
+
               <div className="form-group">
-                <label>E-mail *</label>
+                <label>Alergias e Restrições Clínicas</label>
                 <input
-                  type="email"
-                  placeholder="paciente@email.com"
-                  value={form.email || ''}
-                  disabled={modal === 'edit'}
-                  onChange={(e) => f('email', e.target.value)}
+                  placeholder="ex: Penicilina, Dipirona, Látex (ou Nenhuma)"
+                  value={form.alergias || ''}
+                  onChange={(e) => f('alergias', e.target.value)}
                 />
               </div>
 
@@ -310,7 +363,7 @@ export function PacientesPage({ showToast }) {
               <tr>
                 <th>Paciente</th>
                 <th>CPF</th>
-                <th>Contato</th>
+                <th>Contato & Saúde</th>
                 <th>Status</th>
                 <th>Ações</th>
               </tr>
@@ -323,7 +376,14 @@ export function PacientesPage({ showToast }) {
                       <div className="avatar">
                         {initials(p.nome)}
                       </div>
-                      <strong>{p.nome}</strong>
+                      <div>
+                        <strong>{p.nome}</strong>
+                        {p.tipoSanguineo && (
+                          <span className="badge badge-role-admin" style={{ marginLeft: 6, fontSize: 10 }}>
+                            {p.tipoSanguineo}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td style={{ fontFamily: 'monospace', fontSize: 13, color: 'var(--text-muted)' }}>
@@ -333,12 +393,25 @@ export function PacientesPage({ showToast }) {
                     {p.email || '—'}
                     <br />
                     {p.telefone || ''}
+                    {p.alergias && (
+                      <div style={{ color: '#b91c1c', fontSize: 11, marginTop: 2 }}>
+                        ⚠️ {p.alergias}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <span className="badge badge-green">Ativo</span>
                   </td>
                   <td>
                     <div className="tag-actions">
+                      <button
+                        className="btn btn-primary btn-sm"
+                        style={{ padding: '4px 9px', fontSize: 11.5 }}
+                        onClick={() => setProntuarioPaciente(p)}
+                        title="Ver prontuário eletrônico e histórico"
+                      >
+                        🩺 Prontuário
+                      </button>
                       <button className="btn btn-outline btn-sm" onClick={() => openEdit(p)}>
                         Editar
                       </button>
@@ -356,4 +429,3 @@ export function PacientesPage({ showToast }) {
     </div>
   );
 }
-

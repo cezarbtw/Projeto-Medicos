@@ -29,6 +29,11 @@ public class Paciente {
 
     private Boolean ativo;
 
+    @Column(name = "tipo_sanguineo")
+    private String tipoSanguineo;
+
+    private String alergias;
+
     public Paciente(DadosCadastroPaciente dados) {
         this.ativo = true;
         this.nome = dados.nome();
@@ -36,6 +41,8 @@ public class Paciente {
         this.telefone = dados.telefone();
         this.cpf = dados.cpf();
         this.endereco = new Endereco(dados.endereco());
+        this.tipoSanguineo = dados.tipoSanguineo();
+        this.alergias = dados.alergias();
     }
 
     public void atualizarInformacoes(DadosAtualizacaoPaciente dados) {
@@ -48,7 +55,12 @@ public class Paciente {
         if (dados.endereco() != null) {
             this.endereco.atualizarInformacoes(dados.endereco());
         }
-
+        if (dados.tipoSanguineo() != null) {
+            this.tipoSanguineo = dados.tipoSanguineo();
+        }
+        if (dados.alergias() != null) {
+            this.alergias = dados.alergias();
+        }
     }
 
     public void excluir() {
