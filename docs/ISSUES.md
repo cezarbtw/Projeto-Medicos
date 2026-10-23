@@ -19,7 +19,7 @@ Este documento contém o detalhamento passo a passo de todas as issues do projet
 | **#9** | Segurança / Auth | Controle de Perfis de Usuário (RBAC) e Recuperação de Senha | ✅ Concluída |
 | **#10** | Clínica / PEP | Prontuário Eletrônico do Paciente (PEP) e Histórico Clínico | ✅ Concluída |
 | **#11** | Documentos / PDF | Geração e Emissão de Receituário e Atestado Médico em PDF | ✅ Concluída |
-| **#12** | Frontend / UX | Visão de Agenda em Calendário Interativo Semanal/Mensal | ⏳ Pendente |
+| **#12** | Frontend / UX | Visão de Agenda em Calendário Interativo Semanal/Mensal | ✅ Concluída |
 | **#13** | Notificações | Disparo Automático de E-mails de Confirmação e Cancelamento | ⏳ Pendente |
 | **#14** | Analytics | Métricas Avançadas, Gráficos no Dashboard e Exportação CSV | ⏳ Pendente |
 | **#15** | Compliance / DB | Auditoria de Operações e Rastreabilidade de Modificações (LGPD) | ⏳ Pendente |
@@ -125,7 +125,7 @@ Disponibilizar a emissão e o download instantâneo de documentos médicos ofici
 
 - **Tipo:** `enhancement`, `frontend`, `ux`
 - **Prioridade:** Média
-- **Status:** ⏳ Pendente
+- **Status:** ✅ Concluída
 
 ### Descrição
 A visualização atual de consultas em formato de tabela é eficiente para buscas, mas não oferece a percepção visual de horários vagos e ocupados necessária para recepcionistas e médicos. Esta issue implementa uma visão alternativa em Calendário Interativo.

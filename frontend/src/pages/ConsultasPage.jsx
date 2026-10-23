@@ -3,6 +3,7 @@ import { api, MOCK } from '../services/api';
 import { ConfirmDialog } from '../components/ConfirmDialog';
 import { ProntuarioModal } from '../components/ProntuarioModal';
 import { DocumentoModal } from '../components/DocumentoModal';
+import { CalendarView } from '../components/CalendarView';
 
 const initials = (name = '') =>
   name.split(' ').slice(0, 2).map((w) => w[0]).join('').toUpperCase() || '?';
@@ -32,6 +33,7 @@ export function ConsultasPage({ showToast }) {
   const [form, setForm] = useState({});
   const [prontuarioConsulta, setProntuarioConsulta] = useState(null);
   const [documentoConsulta, setDocumentoConsulta] = useState(null);
+  const [viewMode, setViewMode] = useState('calendario'); // 'calendario' | 'tabela'
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -69,12 +71,17 @@ export function ConsultasPage({ showToast }) {
     return !s || pacName.toLowerCase().includes(s) || medName.toLowerCase().includes(s);
   });
 
-  const openNew = () => {
-    // Definir data padrão para amanhã às 10:00
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(10, 0, 0, 0);
-    const dateStr = tomorrow.toISOString().slice(0, 16);
+  const openNew = (dataHoraInicial) => {
+    let dateStr;
+    if (dataHoraInicial) {
+      dateStr = dataHoraInicial.length === 10 ? `${dataHoraInicial}T10:00` : dataHoraInicial.slice(0, 16);
+    } else {
+      // Definir data padrão para amanhã às 10:00
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(10, 0, 0, 0);
+      dateStr = tomorrow.toISOString().slice(0, 16);
+    }
 
     setForm({
       idMedico: medicos[0]?.id || '',
@@ -291,127 +298,170 @@ export function ConsultasPage({ showToast }) {
         </div>
       )}
 
-      <div className="card">
-        <div className="card-header">
-          <div className="search-bar" style={{ width: 300 }}>
-            <span className="search-icon">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="11" cy="11" r="8" />
-                <path d="m21 21-4.35-4.35" />
-              </svg>
-            </span>
-            <input
-              placeholder="Buscar por médico ou paciente..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <button className="btn btn-primary" onClick={openNew}>
-            + Agendar Consulta
-          </button>
+      {/* Cabeçalho com Alternador de Visualização (Tabela vs Calendário) */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 18, flexWrap: 'wrap', gap: 12 }}>
+        <div>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: 'var(--text)', letterSpacing: -0.5 }}>
+            Gestão de Consultas & Agenda
+          </h1>
+          <p style={{ fontSize: 13, color: 'var(--text-muted)' }}>
+            Acompanhe e organize os atendimentos clínicos na grade interativa ou em lista.
+          </p>
         </div>
 
-        {loading ? (
-          <div className="loading">
-            <div className="spinner" /> Carregando consultas...
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="empty-state">
-            <div className="icon">📅</div>
-            <p>Nenhuma consulta encontrada</p>
-          </div>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Paciente</th>
-                <th>Médico</th>
-                <th>Data / Hora</th>
-                <th>Status</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((c) => {
-                const dt = c.data || c.dataHora;
-                const status = c.status || (c.motivoCancelamento ? 'CANCELADA' : 'AGENDADA');
-                const isCancelada = status === 'CANCELADA';
-
-                return (
-                  <tr key={c.id}>
-                    <td>
-                      <div className="cell-name">
-                        <div className="avatar">
-                          {initials(c.pacienteNome || 'Paciente')}
-                        </div>
-                        <strong>{c.pacienteNome || 'Paciente'}</strong>
-                      </div>
-                    </td>
-                    <td style={{ color: 'var(--text-muted)', fontSize: 13 }}>
-                      {c.medicoNome || 'Dr(a). Médico'}
-                    </td>
-                    <td style={{ fontSize: 13 }}>
-                      {dt
-                        ? new Date(dt).toLocaleString('pt-BR', {
-                          day: '2-digit',
-                          month: '2-digit',
-                          year: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
-                        })
-                        : '—'}
-                    </td>
-                    <td>
-                      <span
-                        className={`badge ${status === 'REALIZADA'
-                          ? 'badge-green'
-                          : isCancelada
-                            ? 'badge-red'
-                            : 'badge-indigo'
-                          }`}
-                      >
-                        {status}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="tag-actions">
-                        {!isCancelada && (
-                          <button
-                            className="btn btn-primary btn-sm"
-                            style={{ padding: '4px 9px', fontSize: 11.5 }}
-                            onClick={() => setProntuarioConsulta(c)}
-                            title="Registrar atendimento e evolução médica no prontuário"
-                          >
-                            🩺 Atendimento
-                          </button>
-                        )}
-                        {!isCancelada && (
-                          <button
-                            className="btn btn-outline btn-sm"
-                            style={{ padding: '4px 9px', fontSize: 11.5 }}
-                            onClick={() => setDocumentoConsulta(c)}
-                            title="Emitir Receituário ou Atestado Médico em PDF"
-                          >
-                            📄 Documento
-                          </button>
-                        )}
-                        {!isCancelada && (
-                          <button
-                            className="btn btn-danger btn-sm"
-                            onClick={() => setCancelModal(c)}
-                          >
-                            Cancelar
-                          </button>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        )}
+        <div className="view-mode-toggle">
+          <button
+            type="button"
+            className={`view-toggle-btn ${viewMode === 'calendario' ? 'active' : ''}`}
+            onClick={() => setViewMode('calendario')}
+          >
+            📅 Modo Calendário
+          </button>
+          <button
+            type="button"
+            className={`view-toggle-btn ${viewMode === 'tabela' ? 'active' : ''}`}
+            onClick={() => setViewMode('tabela')}
+          >
+            📋 Modo Tabela
+          </button>
+        </div>
       </div>
+
+      {viewMode === 'calendario' ? (
+        <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+          <CalendarView
+            consultas={consultas}
+            medicos={medicos}
+            onAgendar={openNew}
+            onAtendimento={(c) => setProntuarioConsulta(c)}
+            onEmitirDocumento={(c) => setDocumentoConsulta(c)}
+            onCancelar={(c) => setCancelModal(c)}
+            loading={loading}
+          />
+        </div>
+      ) : (
+        <div className="card">
+          <div className="card-header">
+            <div className="search-bar" style={{ width: 300 }}>
+              <span className="search-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.35-4.35" />
+                </svg>
+              </span>
+              <input
+                placeholder="Buscar por médico ou paciente..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <button className="btn btn-primary" onClick={() => openNew()}>
+              + Agendar Consulta
+            </button>
+          </div>
+
+          {loading ? (
+            <div className="loading">
+              <div className="spinner" /> Carregando consultas...
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state">
+              <div className="icon">📅</div>
+              <p>Nenhuma consulta encontrada</p>
+            </div>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th>Paciente</th>
+                  <th>Médico</th>
+                  <th>Data / Hora</th>
+                  <th>Status</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((c) => {
+                  const dt = c.data || c.dataHora;
+                  const status = c.status || (c.motivoCancelamento ? 'CANCELADA' : 'AGENDADA');
+                  const isCancelada = status === 'CANCELADA';
+
+                  return (
+                    <tr key={c.id}>
+                      <td>
+                        <div className="cell-name">
+                          <div className="avatar">
+                            {initials(c.pacienteNome || 'Paciente')}
+                          </div>
+                          <strong>{c.pacienteNome || 'Paciente'}</strong>
+                        </div>
+                      </td>
+                      <td style={{ color: 'var(--text-muted)', fontSize: 13 }}>
+                        {c.medicoNome || 'Dr(a). Médico'}
+                      </td>
+                      <td style={{ fontSize: 13 }}>
+                        {dt
+                          ? new Date(dt).toLocaleString('pt-BR', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                          : '—'}
+                      </td>
+                      <td>
+                        <span
+                          className={`badge ${status === 'REALIZADA'
+                            ? 'badge-green'
+                            : isCancelada
+                              ? 'badge-red'
+                              : 'badge-indigo'
+                            }`}
+                        >
+                          {status}
+                        </span>
+                      </td>
+                      <td>
+                        <div className="tag-actions">
+                          {!isCancelada && (
+                            <button
+                              className="btn btn-primary btn-sm"
+                              style={{ padding: '4px 9px', fontSize: 11.5 }}
+                              onClick={() => setProntuarioConsulta(c)}
+                              title="Registrar atendimento e evolução médica no prontuário"
+                            >
+                              🩺 Atendimento
+                            </button>
+                          )}
+                          {!isCancelada && (
+                            <button
+                              className="btn btn-outline btn-sm"
+                              style={{ padding: '4px 9px', fontSize: 11.5 }}
+                              onClick={() => setDocumentoConsulta(c)}
+                              title="Emitir Receituário ou Atestado Médico em PDF"
+                            >
+                              📄 Documento
+                            </button>
+                          )}
+                          {!isCancelada && (
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() => setCancelModal(c)}
+                            >
+                              Cancelar
+                            </button>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
     </div>
   );
 }

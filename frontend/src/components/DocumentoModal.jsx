@@ -372,3 +372,4 @@ export function DocumentoModal({ consulta, paciente, medico, prontuario, onClose
     </div>
   );
 }
+
