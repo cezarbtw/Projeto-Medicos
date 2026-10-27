@@ -6,6 +6,7 @@ import med.voll.api.domain.consulta.validacoes.cancelamento.ValidadorCancelament
 import med.voll.api.domain.medico.Medico;
 import med.voll.api.domain.medico.MedicoRepository;
 import med.voll.api.domain.paciente.PacienteRepository;
+import med.voll.api.infra.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +30,9 @@ public class AgendaDeConsultas {
     @Autowired
     private List<ValidadorCancelamentoDeConsulta> validadoresCancelamento;
 
+    @Autowired
+    private EmailService emailService;
+
     public DadosDetalhamentoConsulta agendar(DadosAgendamentoConsulta dados) {
         if (!pacienteRepository.existsById(dados.idPaciente())) {
             throw new ValidacaoException("Id do paciente informado não existe!");
@@ -49,6 +53,8 @@ public class AgendaDeConsultas {
         var consulta = new Consulta(null, medico, paciente, dados.data(), null);
         consultaRepository.save(consulta);
 
+        emailService.enviarEmailConfirmacaoAgendamento(consulta);
+
         return new DadosDetalhamentoConsulta(consulta);
     }
 
@@ -61,8 +67,9 @@ public class AgendaDeConsultas {
 
         var consulta = consultaRepository.getReferenceById(dados.idConsulta());
         consulta.cancelar(dados.motivo());
-    }
 
+        emailService.enviarEmailCancelamento(consulta);
+    }
 
     private Medico escolherMedico(DadosAgendamentoConsulta dados) {
         if (dados.idMedico() != null) {

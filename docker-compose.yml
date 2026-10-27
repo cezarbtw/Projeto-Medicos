@@ -21,6 +21,16 @@ services:
     networks:
       - vollmed-network
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: vollmed-mailpit
+    restart: always
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - vollmed-network
+
   api:
     build:
       context: .
@@ -35,9 +45,13 @@ services:
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
       JWT_SECRET: 12345678
+      SPRING_MAIL_HOST: mailpit
+      SPRING_MAIL_PORT: 1025
     depends_on:
       db:
         condition: service_healthy
+      mailpit:
+        condition: service_started
     networks:
       - vollmed-network
 
@@ -47,4 +61,3 @@ volumes:
 networks:
   vollmed-network:
     driver: bridge
-

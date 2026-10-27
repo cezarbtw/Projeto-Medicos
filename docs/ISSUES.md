@@ -20,7 +20,7 @@ Este documento contém o detalhamento passo a passo de todas as issues do projet
 | **#10** | Clínica / PEP | Prontuário Eletrônico do Paciente (PEP) e Histórico Clínico | ✅ Concluída |
 | **#11** | Documentos / PDF | Geração e Emissão de Receituário e Atestado Médico em PDF | ✅ Concluída |
 | **#12** | Frontend / UX | Visão de Agenda em Calendário Interativo Semanal/Mensal | ✅ Concluída |
-| **#13** | Notificações | Disparo Automático de E-mails de Confirmação e Cancelamento | ⏳ Pendente |
+| **#13** | Notificações | Disparo Automático de E-mails de Confirmação e Cancelamento | ✅ Concluída |
 | **#14** | Analytics | Métricas Avançadas, Gráficos no Dashboard e Exportação CSV | ⏳ Pendente |
 | **#15** | Compliance / DB | Auditoria de Operações e Rastreabilidade de Modificações (LGPD) | ⏳ Pendente |
 
@@ -167,7 +167,7 @@ A visualização atual de consultas em formato de tabela é eficiente para busca
 
 - **Tipo:** `enhancement`, `backend`, `notification`
 - **Prioridade:** Média
-- **Status:** ⏳ Pendente
+- **Status:** ✅ Concluída
 
 ### Descrição
 Notificar pacientes e médicos por e-mail automaticamente sempre que uma consulta for agendada ou cancelada, garantindo redução na taxa de absenteísmo (no-show) e maior confiabilidade no sistema.
